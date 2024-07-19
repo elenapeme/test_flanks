@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
-    "dev": "ts-node src/app.ts"
+    "dev": "ts-node src/app.ts",
+    "dev:watch": "nodemon -L"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.14.11",
+    "fast-csv": "^5.0.1",
+    "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
   }
