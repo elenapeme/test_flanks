@@ -1,16 +1,19 @@
-import path from 'node:path';
-import AutoLoad from '@fastify/autoload';
-import { FastifyInstance } from 'fastify';
-import { FastifyPluginOptions } from 'fastify';
-import fastify from 'fastify';
+import path from 'node:path'
+import AutoLoad from '@fastify/autoload'
+import { FastifyInstance } from 'fastify'
+import { FastifyPluginOptions } from 'fastify'
+import fastify from 'fastify'
+import cors from '@fastify/cors'
 
-const server: FastifyInstance = fastify({ logger: true });
+const server: FastifyInstance = fastify({ logger: true })
 
 // Define options for CLI arguments if necessary.
-const options: FastifyPluginOptions = {};
+const options: FastifyPluginOptions = {}
+
+const FRONTEND_ORIGIN = "http://localhost:5173"
 
 export default async function (fastify: FastifyInstance, opts: FastifyPluginOptions) {
-  console.log('Registering routes...');
+  console.log('Registering routes...')
 
   // Place your custom code here!
 
@@ -19,13 +22,17 @@ export default async function (fastify: FastifyInstance, opts: FastifyPluginOpti
   fastify.register(AutoLoad, {
     dir: path.join(__dirname, 'routes'),
     options: Object.assign({}, opts)
-  });
+  })
+
+  fastify.register(cors, {
+    origin: FRONTEND_ORIGIN
+  })
 }
 
 server.register(AutoLoad, {
   dir: path.join(__dirname),
   options: Object.assign({}, options)
-});
+})
 
 const start = async () => {
   try {
