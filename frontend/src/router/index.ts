@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import OverviewView from '../components/Overview/OverviewView.vue'
-import InvestmentAnalyticsView from '../components/InvestmentAnalytics/InvestmentAnalyticsView.vue'
+import OverviewView from '../Overview/OverviewView.vue'
+import InvestmentAnalyticsView from '../InvestmentAnalytics/InvestmentAnalyticsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
