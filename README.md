@@ -4,3 +4,4 @@
 - Improvement of types
 - Add env
 - Responsive - adapt to mobile
+- Refactor backend
