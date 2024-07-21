@@ -15,8 +15,7 @@
 
     <v-list density="compact" nav>
       <v-list-item prepend-icon="mdi-chart-line" title="Overview" link :to="{ name: 'overview' }" value="overview"></v-list-item>
-      <v-list-item prepend-icon="mdi-bullseye-arrow" title="Investments" value="starred"></v-list-item>
-      <v-list-item prepend-icon="mdi-account-multiple" title="Shared with me" value="shared"></v-list-item>
+      <v-list-item prepend-icon="mdi-bullseye-arrow" title="Investment Analytics" :to="{ name : 'investment analytics'}" value="investment analytics"></v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>

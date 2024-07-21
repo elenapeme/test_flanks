@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1 class="display-1 mb-4">Overview</h1>
+  <v-container fluid max-width="lg" class="mx-auto">
+    <h1 class="display-1 mb-4">Portfolio Overview</h1>
     <v-row class="mb-4" align="center">
       <v-col
         cols="12"
@@ -30,7 +30,7 @@
         <UpcomingExpirations />
       </v-col>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script setup lang="ts">

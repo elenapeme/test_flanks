@@ -19,3 +19,18 @@ export interface Investment {
     valuation_date: string
     rate_to_euro: number
 }
+
+export interface GraphData {
+    labels: string[]
+    datasets: {
+        data: number[]
+        backgroundColor: string[] | string
+        hoverBackgroundColor?: string
+        label?: string
+        fill?: boolean,
+        borderColor?: string,
+        tension?: number,
+        pointBackgroundColor?: string
+        pointHoverBackgroundColor?: string
+    }[]
+}

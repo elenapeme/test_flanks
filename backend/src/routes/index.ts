@@ -51,38 +51,40 @@ export default async function (fastify: FastifyInstance, opts: any) {
         acc[investment.type] = (acc[investment.type] || 0) + 1
         return acc
       }, {} as Record<string, number>)
-      reply.send(distribution)
+
+      const result = Object.keys(distribution).map(type => ({
+        type,
+        count: distribution[type]
+      }))
+
+      reply.send(result)
     } catch (error) {
       const err = error as Error
       reply.status(500).send({ error: 'Failed to fetch investment distribution by type', details: err.message })
     }
   })
 
-  fastify.get('/investment-distribution-by-currency', async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.get('/investments-by-entity', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const data = await parseCSV()
-      const distribution = data.reduce((acc, investment) => {
-        acc[investment.currency] = (acc[investment.currency] || 0) + 1
+      const entityData = data.reduce((acc, investment) => {
+        const entity = investment.entity
+        if (!acc[entity]) {
+          acc[entity] = 0
+        }
+        acc[entity] += 1
         return acc
       }, {} as Record<string, number>)
-      reply.send(distribution)
-    } catch (error) {
-      const err = error as Error
-      reply.status(500).send({ error: 'Failed to fetch investment distribution by currency', details: err.message })
-    }
-  })
 
-  fastify.get('/investment-performance', async (request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      const data = await parseCSV()
-      const performance = data.map(investment => ({
-        id: investment.id,
-        performance: ((investment.balance - investment.cost) / investment.cost) * 100
+      const result = Object.keys(entityData).map(entity => ({
+        entity,
+        count: entityData[entity]
       }))
-      reply.send(performance)
+
+      reply.send(result)
     } catch (error) {
       const err = error as Error
-      reply.status(500).send({ error: 'Failed to fetch investment performance', details: err.message })
+      reply.status(500).send({ error: 'Failed to fetch investments by entity', details: err.message })
     }
   })
 
@@ -104,13 +106,89 @@ export default async function (fastify: FastifyInstance, opts: any) {
     try {
       const data = await parseCSV()
       const distribution = data.reduce((acc, investment) => {
-        acc[investment.market] = (acc[investment.market] || 0) + 1
+        if (investment.market && investment.market.trim() !== "") {
+          acc[investment.market] = (acc[investment.market] || 0) + 1
+        }
+
         return acc
       }, {} as Record<string, number>)
-      reply.send(distribution)
+
+      const result = Object.keys(distribution).map(market => ({
+        market,
+        count: distribution[market]
+      }))
+
+      reply.send(result)
     } catch (error) {
       const err = error as Error
       reply.status(500).send({ error: 'Failed to fetch investments by market', details: err.message })
     }
   })
+
+
+  fastify.get('/top-performing-investments', async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const data = await parseCSV()
+      const topN = 10 // Top N investments
+      const sortedInvestments = data.sort((a, b) => b.capital_gain - a.capital_gain).slice(0, topN)
+      const result = sortedInvestments.map(investment => ({
+        name: investment.name,
+        capital_gain: investment.capital_gain
+      }))
+
+      reply.send(result)
+    } catch (error) {
+      const err = error as Error
+      reply.status(500).send({ error: 'Failed to fetch top performing investments', details: err.message })
+    }
+  })
+
+  fastify.get('/investment-growth-over-time', async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const data = await parseCSV()
+      const growthData = data.reduce((acc, investment) => {
+        const date = investment.valuation_date
+        if (!acc[date]) {
+          acc[date] = 0
+        }
+        acc[date] += investment.balance
+        return acc
+      }, {} as Record<string, number>)
+
+      const result = Object.keys(growthData).map(date => ({
+        valuation_date: date,
+        total_portfolio_value: growthData[date]
+      }))
+
+      reply.send(result)
+    } catch (error) {
+      const err = error as Error
+      reply.status(500).send({ error: 'Failed to fetch investment growth over time', details: err.message })
+    }
+  })
+
+  fastify.get('/accrued-interest-over-time', async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const data = await parseCSV()
+      const interestData = data.reduce((acc, investment) => {
+        const date = investment.valuation_date
+        if (!acc[date]) {
+          acc[date] = 0
+        }
+        acc[date] += investment.accrued_interest
+        return acc
+      }, {} as Record<string, number>)
+
+      const result = Object.keys(interestData).map(date => ({
+        valuation_date: date,
+        accrued_interest: interestData[date]
+      }))
+
+      reply.send(result)
+    } catch (error) {
+      const err = error as Error
+      reply.status(500).send({ error: 'Failed to fetch accrued interest over time', details: err.message })
+    }
+  })
+
 }

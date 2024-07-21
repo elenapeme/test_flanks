@@ -6,6 +6,7 @@
   font-weight: normal;
   font-family: 'Poppins';
   background-color: #FAFAFA !important;
+  min-height: 100vh;
 }
 
 a,
