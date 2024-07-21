@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import SidebarNav from './components/SidebarNav/SidebarNav.vue'
+import SidebarNav from './SidebarNav/SidebarNav.vue'
 </script>
 
 <style scoped>
